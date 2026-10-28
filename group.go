@@ -1,10 +1,8 @@
 package sheetframe
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
-	"time"
 )
 
 // AggOp describes an aggregate calculation over non-null values.
@@ -60,23 +58,10 @@ func (f Frame) keyColumns(names []string) ([]int, error) {
 	return keys, nil
 }
 
-// rowKey uses a JSON array to preserve boundaries, quoting, and nulls. Times
-// are normalized to UTC so equal instants in different zones share a key.
-func (f Frame) rowKey(r int, keys []int) (string, []any, bool, error) {
-	values := make([]any, len(keys))
-	hasNull := false
-	for i, c := range keys {
-		v := f.columns[c].values[r]
-		if v == nil {
-			hasNull = true
-		}
-		if tm, ok := v.(time.Time); ok {
-			v = tm.UTC()
-		}
-		values[i] = v
-	}
-	b, err := json.Marshal(values)
-	return string(b), values, hasNull, err
+type aggregateState struct {
+	sum, compensation float64
+	count             int
+	extreme           any
 }
 
 // Aggregate returns one row per group, in first-seen order. Count counts
@@ -122,65 +107,76 @@ func (g Grouped) Aggregate(aggs ...Aggregation) (Frame, error) {
 			return Frame{}, fmt.Errorf("unknown aggregation %q", a.Op)
 		}
 	}
-	groups := [][]int{}
+	groups := [][]aggregateState{}
 	keys := [][]any{}
-	lookup := map[string]int{}
+	lookup := map[any]int{}
+	// Text (including encoded compound keys) uses Go's specialized string map.
+	// Other comparable types and null keep their original identity.
+	textLookup := map[string]int{}
+	keyer := rowKeys{frame: g.frame, cols: g.keys}
 	for r := 0; r < g.frame.rows; r++ {
-		key, values, _, err := g.frame.rowKey(r, g.keys)
-		if err != nil {
-			return Frame{}, fmt.Errorf("group key: %w", err)
+		key, _ := keyer.at(r)
+		var i int
+		if text, isText := key.(string); isText {
+			var ok bool
+			i, ok = textLookup[text]
+			if !ok {
+				i = len(groups)
+				textLookup[text] = i
+			}
+		} else {
+			var ok bool
+			i, ok = lookup[key]
+			if !ok {
+				i = len(groups)
+				lookup[key] = i
+			}
 		}
-		i, ok := lookup[key]
-		if !ok {
-			i = len(groups)
-			lookup[key] = i
-			groups = append(groups, nil)
-			keys = append(keys, values)
+		if i == len(groups) {
+			groups = append(groups, make([]aggregateState, len(aggs)))
+			keys = append(keys, keyer.values(r))
 		}
-		groups[i] = append(groups[i], r)
-	}
-	rows := make([][]any, len(groups))
-	for i, members := range groups {
-		row := append([]any(nil), keys[i]...)
 		for j, a := range aggs {
-			count := 0
-			sum, comp := 0.0, 0.0
-			var extreme any
-			for _, r := range members {
-				v := g.frame.columns[cols[j]].values[r]
-				if v == nil {
-					continue
+			v := g.frame.columns[cols[j]].values[r]
+			if v == nil {
+				continue
+			}
+			s := &groups[i][j]
+			s.count++
+			switch a.Op {
+			case Sum, Mean:
+				y := v.(float64) - s.compensation
+				t := s.sum + y
+				s.compensation = (t - s.sum) - y
+				s.sum = t
+			case Min:
+				if s.extreme == nil || compare(v, s.extreme) < 0 {
+					s.extreme = v
 				}
-				count++
-				switch a.Op {
-				case Sum, Mean:
-					n := v.(float64)
-					y := n - comp
-					t := sum + y
-					comp = (t - sum) - y
-					sum = t
-				case Min:
-					if extreme == nil || compare(v, extreme) < 0 {
-						extreme = v
-					}
-				case Max:
-					if extreme == nil || compare(v, extreme) > 0 {
-						extreme = v
-					}
+			case Max:
+				if s.extreme == nil || compare(v, s.extreme) > 0 {
+					s.extreme = v
 				}
 			}
+		}
+	}
+	rows := make([][]any, len(groups))
+	for i, states := range groups {
+		row := append([]any(nil), keys[i]...)
+		for j, a := range aggs {
+			s := states[j]
 			var result any
 			switch a.Op {
 			case Count:
-				result = float64(count)
+				result = float64(s.count)
 			case Sum:
-				result = sum
+				result = s.sum
 			case Mean:
-				if count > 0 {
-					result = sum / float64(count)
+				if s.count > 0 {
+					result = s.sum / float64(s.count)
 				}
 			case Min, Max:
-				result = extreme
+				result = s.extreme
 			}
 			if n, ok := result.(float64); ok && (math.IsInf(n, 0) || math.IsNaN(n)) {
 				return Frame{}, fmt.Errorf("aggregation %q overflowed", a.As)

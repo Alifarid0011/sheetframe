@@ -59,22 +59,18 @@ func (f Frame) Join(right Frame, on []string, how JoinKind) (Frame, error) {
 		headers = append(headers, name)
 		extra = append(extra, c)
 	}
-	lookup := map[string][]int{}
+	lookup := map[any][]int{}
+	rightKeys := rowKeys{frame: right, cols: rkeys}
 	for r := 0; r < right.rows; r++ {
-		key, _, null, err := right.rowKey(r, rkeys)
-		if err != nil {
-			return Frame{}, err
-		}
+		key, null := rightKeys.at(r)
 		if !null {
 			lookup[key] = append(lookup[key], r)
 		}
 	}
 	rows := [][]any{}
+	leftKeys := rowKeys{frame: f, cols: lkeys}
 	for r := 0; r < f.rows; r++ {
-		key, _, null, err := f.rowKey(r, lkeys)
-		if err != nil {
-			return Frame{}, err
-		}
+		key, null := leftKeys.at(r)
 		matches := lookup[key]
 		if null {
 			matches = nil
