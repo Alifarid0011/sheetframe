@@ -1,8 +1,9 @@
 package sheetframe
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 )
@@ -100,19 +101,30 @@ func (f Frame) Sort(name string, descending bool) (Frame, error) {
 		indices[i] = i
 	}
 	values := f.columns[c].values
-	sort.SliceStable(indices, func(i, j int) bool {
-		a, b := values[indices[i]], values[indices[j]]
+	if f.rows >= 2048 && f.columns[c].field.Kind == Number {
+		return f.take(sortNumbers(values, indices, descending)), nil
+	}
+	// Original row positions break ties, preserving stable order while using
+	// the faster in-place sorter without an additional value buffer.
+	slices.SortFunc(indices, func(i, j int) int {
+		a, b := values[i], values[j]
 		if a == nil {
-			return false
+			if b == nil {
+				return cmp.Compare(i, j)
+			}
+			return 1
 		}
 		if b == nil {
-			return true
+			return -1
 		}
-		cmp := compare(a, b)
+		order := compare(a, b)
+		if order == 0 {
+			return cmp.Compare(i, j)
+		}
 		if descending {
-			return cmp > 0
+			return -order
 		}
-		return cmp < 0
+		return order
 	})
 	return f.take(indices), nil
 }
