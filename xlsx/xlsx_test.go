@@ -1,8 +1,10 @@
 package xlsx
 
 import (
+	"archive/zip"
 	"bytes"
 	"errors"
+	"io"
 	"reflect"
 	"strings"
 	"testing"
@@ -113,5 +115,102 @@ func TestWriteErrors(t *testing.T) {
 	}
 	if err := Write(&bytes.Buffer{}, f, "bad/name"); err == nil {
 		t.Fatal("invalid sheet name accepted")
+	}
+}
+
+func TestCachedFormulaTypes(t *testing.T) {
+	for _, tt := range []struct {
+		typ, raw string
+		want     any
+	}{
+		{"str", "hello", "hello"}, {"str", "001", "001"}, {"str", "", ""}, {"n", "42", float64(42)}, {"b", "1", true},
+	} {
+		t.Run(tt.typ+tt.raw, func(t *testing.T) {
+			f := excelize.NewFile()
+			f.SetCellValue("Sheet1", "A1", "result")
+			f.SetCellValue("Sheet1", "A2", "placeholder")
+			data := workbookBytes(t, f)
+			zr, err := zip.NewReader(bytes.NewReader(data), int64(len(data)))
+			if err != nil {
+				t.Fatal(err)
+			}
+			var out bytes.Buffer
+			zw := zip.NewWriter(&out)
+			for _, entry := range zr.File {
+				r, err := entry.Open()
+				if err != nil {
+					t.Fatal(err)
+				}
+				xml, err := io.ReadAll(r)
+				r.Close()
+				if err != nil {
+					t.Fatal(err)
+				}
+				if entry.Name == "xl/worksheets/sheet1.xml" {
+					s := string(xml)
+					start := strings.Index(s, `<c r="A2"`)
+					if start < 0 {
+						t.Fatal("fixture cell missing")
+					}
+					end := start + strings.Index(s[start:], `</c>`) + 4
+					xml = []byte(s[:start] + `<c r="A2" t="` + tt.typ + `"><f>1</f><v>` + tt.raw + `</v></c>` + s[end:])
+				}
+				w, err := zw.Create(entry.Name)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if _, err = w.Write(xml); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if err := zw.Close(); err != nil {
+				t.Fatal(err)
+			}
+			frame, err := Read(bytes.NewReader(out.Bytes()), Options{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			got, err := frame.At(0, "result")
+			if err != nil || !reflect.DeepEqual(got, tt.want) {
+				t.Fatalf("got %#v, %v; want %#v", got, err, tt.want)
+			}
+		})
+	}
+}
+
+func TestWriteRejectsLossyValues(t *testing.T) {
+	for _, value := range []any{strings.Repeat("a", 32768), strings.Repeat("😀", 16384), time.Date(1800, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(10000, 1, 1, 0, 0, 0, 0, time.UTC)} {
+		frame, err := sf.New([]string{"value"}, [][]any{{value}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := Write(&bytes.Buffer{}, frame, ""); err == nil {
+			t.Fatalf("lossy export accepted for %T", value)
+		}
+	}
+	frame, err := sf.New([]string{strings.Repeat("x", 32768)}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := Write(&bytes.Buffer{}, frame, ""); err == nil {
+		t.Fatal("oversized header accepted")
+	}
+	for _, value := range []any{strings.Repeat("a", 32767), time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(9999, 12, 31, 0, 0, 0, 0, time.UTC)} {
+		frame, err := sf.New([]string{"value"}, [][]any{{value}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		var buf bytes.Buffer
+		if err := Write(&buf, frame, ""); err != nil {
+			t.Fatal(err)
+		}
+		out, err := Read(bytes.NewReader(buf.Bytes()), Options{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := out.At(0, "value")
+		if err != nil || !reflect.DeepEqual(got, value) {
+			t.Fatalf("supported boundary changed: got %v, %v", got, err)
+		}
 	}
 }

@@ -7,6 +7,7 @@ package xlsx
 import (
 	"fmt"
 	"io"
+	"math"
 	"strconv"
 	"time"
 
@@ -124,7 +125,7 @@ func readCell(f *excelize.File, sheet, cell, raw string, date1904 bool, styles m
 		return nil, err
 	}
 	switch typ {
-	case excelize.CellTypeInlineString, excelize.CellTypeSharedString:
+	case excelize.CellTypeInlineString, excelize.CellTypeSharedString, excelize.CellTypeFormula:
 		return raw, nil
 	case excelize.CellTypeError:
 		return nil, fmt.Errorf("Excel error %s", raw)
@@ -166,7 +167,20 @@ func readCell(f *excelize.File, sheet, cell, raw string, date1904 bool, styles m
 		styles[styleID] = isDate
 	}
 	if isDate {
-		return excelize.ExcelDateToTime(n, date1904)
+		limit := 2958466.0 // First day after Excel's supported year 9999.
+		if date1904 {
+			limit -= 1462
+		}
+		if math.IsNaN(n) || n < 0 || n >= limit {
+			return nil, fmt.Errorf("date serial is outside Excel's supported range")
+		}
+		tm, err := excelize.ExcelDateToTime(n, date1904)
+		// Excelize's Julian-date path is one day early before the fictitious
+		// 1900 leap day. Serial 1 is January 1, not December 31.
+		if err == nil && !date1904 && n >= 1 && n < 60 {
+			tm = tm.AddDate(0, 0, 1)
+		}
+		return tm, err
 	}
 	return n, nil
 }
@@ -179,6 +193,11 @@ func Write(w io.Writer, frame sf.Frame, sheet string) (err error) {
 	headers := frame.Columns()
 	if len(headers) == 0 {
 		return fmt.Errorf("XLSX export requires at least one column")
+	}
+	for c, name := range headers {
+		if exceedsCellLimit(name) {
+			return fmt.Errorf("header column %d exceeds Excel's 32767 UTF-16 unit limit", c)
+		}
 	}
 	if sheet == "" {
 		sheet = "Sheet1"
@@ -221,8 +240,15 @@ func Write(w io.Writer, frame sf.Frame, sheet string) (err error) {
 			if e != nil {
 				return e
 			}
+			if s, ok := v.(string); ok && exceedsCellLimit(s) {
+				return fmt.Errorf("row %d, column %q exceeds Excel's 32767 UTF-16 unit limit", r, name)
+			}
 			if tm, ok := v.(time.Time); ok {
-				v = excelize.Cell{StyleID: dateStyle, Value: tm.UTC()}
+				tm = tm.UTC()
+				if tm.Year() < 1900 || tm.Year() > 9999 {
+					return fmt.Errorf("row %d, column %q: Excel export supports UTC years 1900 through 9999", r, name)
+				}
+				v = excelize.Cell{StyleID: dateStyle, Value: tm}
 			}
 			row[c] = v
 		}
@@ -238,4 +264,18 @@ func Write(w io.Writer, frame sf.Frame, sheet string) (err error) {
 		return err
 	}
 	return f.Write(w)
+}
+
+func exceedsCellLimit(s string) bool {
+	units := 0
+	for _, r := range s {
+		units++
+		if r > 0xFFFF {
+			units++
+		}
+		if units > excelize.TotalCellChars {
+			return true
+		}
+	}
+	return false
 }
