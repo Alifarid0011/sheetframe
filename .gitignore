@@ -1,0 +1,5 @@
+/docs/demo.wasm
+/docs/wasm_exec.js
+/coverage.out
+*.test
+.DS_Store
