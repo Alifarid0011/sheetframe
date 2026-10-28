@@ -9,6 +9,7 @@ import (
 	"math"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Kind describes the non-null values in a column.
@@ -47,6 +48,9 @@ type Frame struct {
 func New(headers []string, rows [][]any) (Frame, error) {
 	f := Frame{columns: make([]column, len(headers)), index: make(map[string]int, len(headers)), rows: len(rows)}
 	for i, name := range headers {
+		if !utf8.ValidString(name) {
+			return Frame{}, fmt.Errorf("column %d: name contains invalid UTF-8", i)
+		}
 		if strings.TrimSpace(name) == "" {
 			return Frame{}, fmt.Errorf("column %d: name is blank", i)
 		}
@@ -84,6 +88,9 @@ func normalize(v any) (any, Kind, error) {
 	case nil:
 		return nil, Unknown, nil
 	case string:
+		if !utf8.ValidString(x) {
+			return nil, Unknown, fmt.Errorf("string contains invalid UTF-8")
+		}
 		return x, String, nil
 	case bool:
 		return x, Bool, nil
@@ -247,6 +254,9 @@ func (r Row) Get(name string) (any, bool) {
 // WithColumn computes or replaces a column without modifying f. Calculation
 // errors are wrapped with the row index and can be inspected with errors.Is.
 func (f Frame) WithColumn(name string, fn func(Row) (any, error)) (Frame, error) {
+	if !utf8.ValidString(name) {
+		return Frame{}, fmt.Errorf("column name contains invalid UTF-8")
+	}
 	if strings.TrimSpace(name) == "" {
 		return Frame{}, fmt.Errorf("column name is blank")
 	}

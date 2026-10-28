@@ -44,6 +44,24 @@ func TestNewValidation(t *testing.T) {
 	}
 }
 
+func TestRejectInvalidUTF8(t *testing.T) {
+	for _, value := range []string{"\xff", "\xfe"} {
+		if _, err := New([]string{"key"}, [][]any{{value}}); err == nil {
+			t.Fatal("invalid UTF-8 accepted as group/join key")
+		}
+		if _, err := New([]string{value}, nil); err == nil {
+			t.Fatal("invalid UTF-8 header accepted")
+		}
+	}
+	f := fixture(t)
+	if _, err := f.WithColumn("key", func(Row) (any, error) { return "\xff", nil }); err == nil {
+		t.Fatal("calculation bypassed string validation")
+	}
+	if _, err := ReadCSV(strings.NewReader("key\n\xff\n")); err == nil {
+		t.Fatal("CSV bypassed string validation")
+	}
+}
+
 func TestFrameImmutability(t *testing.T) {
 	headers := []string{"x"}
 	rows := [][]any{{1}, {nil}}
