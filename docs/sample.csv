@@ -1,0 +1,25 @@
+order_id,region,product,channel,units,revenue,fulfilled
+1001,North,Desk lamp,Online,12,720,true
+1002,West,Oak shelf,Retail,8,1280,true
+1003,South,Desk lamp,Online,15,900,true
+1004,East,Linen chair,Retail,6,1740,true
+1005,North,Oak shelf,Wholesale,20,3000,true
+1006,West,Linen chair,Online,4,1160,false
+1007,East,Desk lamp,Online,18,1080,true
+1008,South,Oak shelf,Retail,7,1120,true
+1009,North,Linen chair,Online,5,1450,false
+1010,West,Desk lamp,Wholesale,30,1650,true
+1011,East,Oak shelf,Retail,9,1440,true
+1012,South,Linen chair,Online,3,870,true
+1013,North,Desk lamp,Retail,11,660,true
+1014,West,Oak shelf,Online,13,2080,true
+1015,East,Linen chair,Wholesale,12,3240,true
+1016,South,Desk lamp,Retail,8,480,false
+1017,North,Oak shelf,Online,6,960,true
+1018,West,Linen chair,Retail,7,2030,true
+1019,East,Desk lamp,Wholesale,24,1320,true
+1020,South,Oak shelf,Online,10,1600,true
+1021,North,Linen chair,Retail,4,1160,true
+1022,West,Desk lamp,Online,16,960,true
+1023,East,Oak shelf,Wholesale,18,2700,false
+1024,South,Linen chair,Retail,5,1450,true
