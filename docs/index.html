@@ -43,18 +43,18 @@ if err != nil {
     return err
 }
 
-<span class="code-comment">// Every operation returns a new frame.</span>
-groups, err := f.GroupBy(<span class="code-string">"region"</span>)
+<span class="code-comment">// Compose the analysis. Check one error.</span>
+summary, err := f.Query().
+    GroupBy(<span class="code-string">"region"</span>).
+    Aggregate(sheetframe.Aggregation{
+        Column: <span class="code-string">"revenue"</span>,
+        Op: sheetframe.Sum, As: <span class="code-string">"total"</span>,
+    }).
+    Sort(<span class="code-string">"total"</span>, true).
+    Collect()
 if err != nil {
     return err
-}
-summary, err := groups.Aggregate(
-    sheetframe.Aggregation{
-        Column: <span class="code-string">"revenue"</span>,
-        Op:     sheetframe.Sum,
-        As:     <span class="code-string">"total_revenue"</span>,
-    },
-)</code></pre></div></section>
+}</code></pre></div></section>
     <section class="limitations shell"><span class="eyebrow">BUILT WITH CLEAR EDGES</span><p>In-memory, eager operations. Excel imports read cached formula values; they don’t calculate formulas. Exports create a fresh workbook of values. <a href="https://github.com/Alifarid0011/sheetframe#readme">Read the scope & limitations ↗</a></p></section>
   </main>
   <footer class="site-footer shell"><a class="wordmark" href="./">sheetframe<span class="footer-by">by alifarid</span></a><p>A fresh perspective on tabular data.</p><a href="https://github.com/Alifarid0011/sheetframe">Open source on GitHub ↗</a></footer>

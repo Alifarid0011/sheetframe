@@ -42,15 +42,14 @@ func main() {
 
     sales, err := xlsx.Read(input, xlsx.Options{Sheet: "Sales"})
     if err != nil { log.Fatal(err) }
-    sales, err = sales.Filter("revenue", sf.Ge, 1000)
-    if err != nil { log.Fatal(err) }
-    groups, err := sales.GroupBy("region")
-    if err != nil { log.Fatal(err) }
-    totals, err := groups.Aggregate(sf.Aggregation{
-        Column: "revenue", Op: sf.Sum, As: "total_revenue",
-    })
-    if err != nil { log.Fatal(err) }
-    totals, err = totals.Sort("total_revenue", true)
+    totals, err := sales.Query().
+        Filter("revenue", sf.Ge, 1000).
+        GroupBy("region").
+        Aggregate(sf.Aggregation{
+            Column: "revenue", Op: sf.Sum, As: "total_revenue",
+        }).
+        Sort("total_revenue", true).
+        Collect()
     if err != nil { log.Fatal(err) }
 
     output, err := os.Create("totals.xlsx")
@@ -63,11 +62,12 @@ func main() {
 }
 ```
 
-## What v0.1 does
+## What you can do
 
 | Task | API |
 | --- | --- |
 | Build a typed table | `New(headers, rows)` |
+| Chain operations with one error check | `Query().Filter(...).GroupBy(...).Aggregate(...).Sort(...).Collect()` |
 | Inspect data | `Shape`, `Schema`, `Columns`, `At`, `Records`, `Head` |
 | Project columns | `Select` |
 | Filter rows | `Filter` with comparisons, `Contains`, `IsNull`, `NotNull` |

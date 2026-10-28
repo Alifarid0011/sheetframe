@@ -3,12 +3,31 @@
 Import the core as `sf "github.com/Alifarid0011/sheetframe"` and Excel I/O as
 `"github.com/Alifarid0011/sheetframe/xlsx"`.
 
+## Fluent pipelines
+
+Use `Query` to compose operations and check one error at the end:
+
+```go
+totals, err := sales.Query().
+    Filter("revenue", sf.Ge, 1000).
+    GroupBy("region").
+    Aggregate(sf.Aggregation{Column: "revenue", Op: sf.Sum, As: "total"}).
+    Sort("total", true).
+    Collect()
+if err != nil { return err }
+```
+
+Operations execute immediately. `Collect` retrieves the result and first error;
+it does not trigger a lazy optimizer. Later operations and callbacks are skipped
+after an error. Query values can be reused to create independent branches without
+mutating the input. The individual `Frame` methods remain available when you want
+to handle errors at each step. See the [executable example](../example_query_test.go).
+
 ## Values and ownership
 
 `New([]string, [][]any)` validates a rectangular table and copies its input.
 Columns must have unique nonblank names and homogeneous non-null types. Text
-values and names must be valid UTF-8; invalid sequences return errors so group
-and join keys cannot collapse during serialization. Integer
+values and names must be valid UTF-8; invalid sequences return errors. Integer
 and float inputs normalize to `float64`; supported other types are `string`,
 `bool`, and `time.Time`. `nil` is a missing cell. No mutable maps, slices, pointers,
 or arbitrary objects are accepted as cells. Large integer inputs outside ±2^53,
