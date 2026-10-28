@@ -1,0 +1,26 @@
+goos: linux
+goarch: amd64
+pkg: github.com/Alifarid0011/sheetframe
+cpu: 12th Gen Intel(R) Core(TM) i3-1215U
+BenchmarkFrame/Select100k         	  838683	       842.3 ns/op	     320 B/op	       3 allocs/op
+BenchmarkFrame/Select100k         	  836827	       781.6 ns/op	     320 B/op	       3 allocs/op
+BenchmarkFrame/Select100k         	  815468	       740.5 ns/op	     320 B/op	       3 allocs/op
+BenchmarkFrame/Select100k         	  805099	       738.9 ns/op	     320 B/op	       3 allocs/op
+BenchmarkFrame/Select100k         	  833887	       739.2 ns/op	     320 B/op	       3 allocs/op
+BenchmarkFrame/Filter100k         	     100	   6782102 ns/op	 3211448 B/op	       6 allocs/op
+BenchmarkFrame/Filter100k         	     100	   9340048 ns/op	 3211448 B/op	       6 allocs/op
+BenchmarkFrame/Filter100k         	     100	   6952264 ns/op	 3211448 B/op	       6 allocs/op
+BenchmarkFrame/Filter100k         	     100	   6824196 ns/op	 3211448 B/op	       6 allocs/op
+BenchmarkFrame/Filter100k         	      97	   6960115 ns/op	 3211448 B/op	       6 allocs/op
+BenchmarkFrame/GroupSum100k       	       3	  77928094 ns/op	 9772861 B/op	  400444 allocs/op
+BenchmarkFrame/GroupSum100k       	       3	  77886737 ns/op	 9772861 B/op	  400444 allocs/op
+BenchmarkFrame/GroupSum100k       	       3	  82679564 ns/op	 9772861 B/op	  400444 allocs/op
+BenchmarkFrame/GroupSum100k       	       3	  82313851 ns/op	 9772861 B/op	  400444 allocs/op
+BenchmarkFrame/GroupSum100k       	       3	  78530191 ns/op	 9772861 B/op	  400444 allocs/op
+BenchmarkFrame/Sort100k           	       3	  73673816 ns/op	 5619944 B/op	       7 allocs/op
+BenchmarkFrame/Sort100k           	       3	  67801553 ns/op	 5619944 B/op	       7 allocs/op
+BenchmarkFrame/Sort100k           	       4	  63672287 ns/op	 5619944 B/op	       7 allocs/op
+BenchmarkFrame/Sort100k           	       3	  67764328 ns/op	 5619944 B/op	       7 allocs/op
+BenchmarkFrame/Sort100k           	       4	  62949444 ns/op	 5619944 B/op	       7 allocs/op
+PASS
+ok  	github.com/Alifarid0011/sheetframe	12.325s

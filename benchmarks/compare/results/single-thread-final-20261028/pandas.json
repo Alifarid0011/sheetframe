@@ -1,0 +1,264 @@
+{
+  "metadata": {
+    "python": "3.12.14",
+    "os": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "processor": "",
+    "logical_cpus": 8,
+    "numpy": "2.3.5",
+    "version": "3.1.0",
+    "optional_pyarrow_installed": false,
+    "warmups": 2,
+    "repeats": 7,
+    "check_only": false,
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "POLARS_MAX_THREADS": "1"
+    },
+    "timing": "native eager operation result; checksum/export/GC before sample excluded; normal GC during operation enabled",
+    "pandas_copy_on_write": "True",
+    "dtypes": {
+      "group": "str",
+      "amount": "float64",
+      "flag": "bool"
+    },
+    "pandas_string_storage": "python",
+    "process_wall_seconds_including_untimed_work": 60.02799987792969
+  },
+  "results": [
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 100000,
+      "operation": "select",
+      "output_rows": 100000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "1912289876ca73c35aaab73d4d1e784400475664026f0e41be8cec85cf993aa2",
+      "status": "ok",
+      "samples_ns": [
+        1054041,
+        1011354,
+        1031937,
+        1321913,
+        1286258,
+        911864,
+        956079
+      ],
+      "median_ns": 1031937
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 100000,
+      "operation": "filter",
+      "output_rows": 50000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "15b7db71a53a5b46f4da05a1c9b42a108d08495eb7ad4e322e91548b50dac6fd",
+      "status": "ok",
+      "samples_ns": [
+        2685105,
+        3626695,
+        2859117,
+        2694138,
+        2679850,
+        2683505,
+        2697597
+      ],
+      "median_ns": 2694138
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 100000,
+      "operation": "group_sum",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "d7ce46d62374fc0460b6eba6a849629abe135acc6319898c5c374650c7b3c9df",
+      "status": "ok",
+      "samples_ns": [
+        17025999,
+        17191101,
+        17070297,
+        17464634,
+        17384305,
+        17329421,
+        17342082
+      ],
+      "median_ns": 17329421
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 100000,
+      "operation": "stable_sort",
+      "output_rows": 100000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "375181415fe886fcf306d9dad2d2add40104a5b113a411aef6ef991afa6a28da",
+      "status": "ok",
+      "samples_ns": [
+        8401479,
+        8077576,
+        8011896,
+        7943925,
+        8400940,
+        8157684,
+        8036118
+      ],
+      "median_ns": 8077576
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 100000,
+      "operation": "pipeline",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "6262825b3fb216fed29fce980431ef0396e4933926eb629abccc0656e0d1e028",
+      "status": "ok",
+      "samples_ns": [
+        12288795,
+        12033928,
+        11935194,
+        11907082,
+        12169808,
+        13105218,
+        12334086
+      ],
+      "median_ns": 12169808
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 1000000,
+      "operation": "select",
+      "output_rows": 1000000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "422abf4a0a3e106e215db35a700de54277475bf233d1df1f9353205f75517d23",
+      "status": "ok",
+      "samples_ns": [
+        949541,
+        933943,
+        955562,
+        951471,
+        946317,
+        910247,
+        922665
+      ],
+      "median_ns": 946317
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 1000000,
+      "operation": "filter",
+      "output_rows": 500000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "6a8a11768a480b804147ecbce6c2d4fc55c7d280767d3cc1e3fc956f70ac53f8",
+      "status": "ok",
+      "samples_ns": [
+        18676748,
+        18795815,
+        18859949,
+        18650337,
+        18654285,
+        18843838,
+        18789875
+      ],
+      "median_ns": 18789875
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 1000000,
+      "operation": "group_sum",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "660c8eff9ad5bb69d31f4de027aea792fa3987cacefc0afcb2cd15d4c2c63404",
+      "status": "ok",
+      "samples_ns": [
+        160237585,
+        157283921,
+        162788156,
+        155487202,
+        174209190,
+        223962551,
+        171955810
+      ],
+      "median_ns": 162788156
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 1000000,
+      "operation": "stable_sort",
+      "output_rows": 1000000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "7b3dcd74f2dbf2194cc9e908d9bada681b588b0e57f162746826bf7e4ffd00dd",
+      "status": "ok",
+      "samples_ns": [
+        292254122,
+        164433370,
+        123911515,
+        112245801,
+        111576775,
+        110881479,
+        112855086
+      ],
+      "median_ns": 112855086
+    },
+    {
+      "engine": "pandas",
+      "version": "3.1.0",
+      "input_rows": 1000000,
+      "operation": "pipeline",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "5311fdd06357cde1f45db2e82162db765eee43a16c861cfd7264d1b5714ece5e",
+      "status": "ok",
+      "samples_ns": [
+        94959184,
+        95256373,
+        94895190,
+        94791399,
+        95194406,
+        95348735,
+        94425525
+      ],
+      "median_ns": 94959184
+    }
+  ]
+}

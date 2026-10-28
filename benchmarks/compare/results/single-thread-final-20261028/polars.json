@@ -1,0 +1,263 @@
+{
+  "metadata": {
+    "python": "3.12.14",
+    "os": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "processor": "",
+    "logical_cpus": 8,
+    "numpy": "2.3.5",
+    "version": "2.1.0",
+    "optional_pyarrow_installed": false,
+    "warmups": 2,
+    "repeats": 7,
+    "check_only": false,
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "POLARS_MAX_THREADS": "1"
+    },
+    "timing": "native eager operation result; checksum/export/GC before sample excluded; normal GC during operation enabled",
+    "polars_thread_pool_size": 1,
+    "dtypes": {
+      "group": "String",
+      "amount": "Float64",
+      "flag": "Boolean"
+    },
+    "process_wall_seconds_including_untimed_work": 47.363800287246704
+  },
+  "results": [
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 100000,
+      "operation": "select",
+      "output_rows": 100000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "1912289876ca73c35aaab73d4d1e784400475664026f0e41be8cec85cf993aa2",
+      "status": "ok",
+      "samples_ns": [
+        316395,
+        334566,
+        324263,
+        383304,
+        334089,
+        395310,
+        316842
+      ],
+      "median_ns": 334089
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 100000,
+      "operation": "filter",
+      "output_rows": 50000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "15b7db71a53a5b46f4da05a1c9b42a108d08495eb7ad4e322e91548b50dac6fd",
+      "status": "ok",
+      "samples_ns": [
+        977337,
+        989083,
+        955680,
+        988361,
+        1532784,
+        962076,
+        943165
+      ],
+      "median_ns": 977337
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 100000,
+      "operation": "group_sum",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "d7ce46d62374fc0460b6eba6a849629abe135acc6319898c5c374650c7b3c9df",
+      "status": "ok",
+      "samples_ns": [
+        4078865,
+        4292935,
+        4150227,
+        4144290,
+        4128169,
+        4080801,
+        4113122
+      ],
+      "median_ns": 4128169
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 100000,
+      "operation": "stable_sort",
+      "output_rows": 100000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "375181415fe886fcf306d9dad2d2add40104a5b113a411aef6ef991afa6a28da",
+      "status": "ok",
+      "samples_ns": [
+        14099334,
+        13471820,
+        14372341,
+        13434139,
+        14265519,
+        15146998,
+        14883446
+      ],
+      "median_ns": 14265519
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 100000,
+      "operation": "pipeline",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "6262825b3fb216fed29fce980431ef0396e4933926eb629abccc0656e0d1e028",
+      "status": "ok",
+      "samples_ns": [
+        3635585,
+        3651600,
+        3574118,
+        3778087,
+        3609884,
+        3657318,
+        3584501
+      ],
+      "median_ns": 3635585
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 1000000,
+      "operation": "select",
+      "output_rows": 1000000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "422abf4a0a3e106e215db35a700de54277475bf233d1df1f9353205f75517d23",
+      "status": "ok",
+      "samples_ns": [
+        342406,
+        343970,
+        335764,
+        326795,
+        327614,
+        337608,
+        330426
+      ],
+      "median_ns": 335764
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 1000000,
+      "operation": "filter",
+      "output_rows": 500000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "6a8a11768a480b804147ecbce6c2d4fc55c7d280767d3cc1e3fc956f70ac53f8",
+      "status": "ok",
+      "samples_ns": [
+        9632336,
+        7416131,
+        7234427,
+        7182133,
+        7145915,
+        4832992,
+        7150376
+      ],
+      "median_ns": 7182133
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 1000000,
+      "operation": "group_sum",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "660c8eff9ad5bb69d31f4de027aea792fa3987cacefc0afcb2cd15d4c2c63404",
+      "status": "ok",
+      "samples_ns": [
+        28490561,
+        28133477,
+        28683182,
+        28320586,
+        28454912,
+        28100931,
+        28464221
+      ],
+      "median_ns": 28454912
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 1000000,
+      "operation": "stable_sort",
+      "output_rows": 1000000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "7b3dcd74f2dbf2194cc9e908d9bada681b588b0e57f162746826bf7e4ffd00dd",
+      "status": "ok",
+      "samples_ns": [
+        199684457,
+        207462805,
+        200294335,
+        199416701,
+        200183842,
+        201538403,
+        202852942
+      ],
+      "median_ns": 200294335
+    },
+    {
+      "engine": "polars",
+      "version": "2.1.0",
+      "input_rows": 1000000,
+      "operation": "pipeline",
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "5311fdd06357cde1f45db2e82162db765eee43a16c861cfd7264d1b5714ece5e",
+      "status": "ok",
+      "samples_ns": [
+        19857411,
+        21900411,
+        19608454,
+        19533365,
+        19729449,
+        19655979,
+        19444754
+      ],
+      "median_ns": 19655979
+    }
+  ]
+}

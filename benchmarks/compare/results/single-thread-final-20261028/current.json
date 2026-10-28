@@ -1,0 +1,255 @@
+{
+  "metadata": {
+    "arch": "amd64",
+    "check_only": false,
+    "cpu": "12th Gen Intel(R) Core(TM) i3-1215U",
+    "dependencies": {
+      "github.com/Alifarid0011/sheetframe": "v0.1.0 => /home/ali/Desktop/Projects/sheetframe",
+      "github.com/mauricelam/genny": "v0.0.0-20190320071652-0800202903e5",
+      "github.com/tobgu/qframe": "v0.4.0"
+    },
+    "go": "go1.26.8",
+    "gogc": "",
+    "gomaxprocs": 1,
+    "logical_cpus": 1,
+    "os": "linux",
+    "repeats": 7,
+    "timing": "native eager operation result; checksum/export/GC before sample excluded; normal GC during operation enabled",
+    "warmups": 2,
+    "process_wall_seconds_including_untimed_work": 23.60002875328064
+  },
+  "results": [
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "select",
+      "samples_ns": [
+        7929,
+        12873,
+        9232,
+        8776,
+        8809,
+        8641,
+        7988
+      ],
+      "median_ns": 8776,
+      "output_rows": 100000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "1912289876ca73c35aaab73d4d1e784400475664026f0e41be8cec85cf993aa2",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "filter",
+      "samples_ns": [
+        2281833,
+        2842691,
+        2265010,
+        2192733,
+        2083667,
+        2138681,
+        2099000
+      ],
+      "median_ns": 2192733,
+      "output_rows": 50000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "15b7db71a53a5b46f4da05a1c9b42a108d08495eb7ad4e322e91548b50dac6fd",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "group_sum",
+      "samples_ns": [
+        5427952,
+        5071098,
+        5968832,
+        5056408,
+        5544674,
+        5024801,
+        5055145
+      ],
+      "median_ns": 5071098,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "d7ce46d62374fc0460b6eba6a849629abe135acc6319898c5c374650c7b3c9df",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "stable_sort",
+      "samples_ns": [
+        21812557,
+        19770134,
+        25515086,
+        18164512,
+        24878595,
+        20499212,
+        24401240
+      ],
+      "median_ns": 21812557,
+      "output_rows": 100000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "375181415fe886fcf306d9dad2d2add40104a5b113a411aef6ef991afa6a28da",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "pipeline",
+      "samples_ns": [
+        4719905,
+        4671205,
+        4845212,
+        4733995,
+        4865078,
+        4631874,
+        4598297
+      ],
+      "median_ns": 4719905,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "6262825b3fb216fed29fce980431ef0396e4933926eb629abccc0656e0d1e028",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "select",
+      "samples_ns": [
+        10701,
+        9943,
+        9118,
+        12986,
+        10724,
+        10091,
+        9681
+      ],
+      "median_ns": 10091,
+      "output_rows": 1000000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "422abf4a0a3e106e215db35a700de54277475bf233d1df1f9353205f75517d23",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "filter",
+      "samples_ns": [
+        24647837,
+        24874017,
+        24581790,
+        25086661,
+        24683943,
+        24985692,
+        24674678
+      ],
+      "median_ns": 24683943,
+      "output_rows": 500000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "6a8a11768a480b804147ecbce6c2d4fc55c7d280767d3cc1e3fc956f70ac53f8",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "group_sum",
+      "samples_ns": [
+        55872513,
+        54917865,
+        51575457,
+        55562363,
+        51567132,
+        51657909,
+        50270926
+      ],
+      "median_ns": 51657909,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "660c8eff9ad5bb69d31f4de027aea792fa3987cacefc0afcb2cd15d4c2c63404",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "stable_sort",
+      "samples_ns": [
+        286017040,
+        277938719,
+        265197427,
+        269623430,
+        291283588,
+        284689140,
+        281514079
+      ],
+      "median_ns": 281514079,
+      "output_rows": 1000000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "7b3dcd74f2dbf2194cc9e908d9bada681b588b0e57f162746826bf7e4ffd00dd",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-current",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "pipeline",
+      "samples_ns": [
+        50289346,
+        50306164,
+        52215900,
+        50210632,
+        51227894,
+        50238455,
+        50730577
+      ],
+      "median_ns": 50306164,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "5311fdd06357cde1f45db2e82162db765eee43a16c861cfd7264d1b5714ece5e",
+      "status": "ok"
+    }
+  ]
+}

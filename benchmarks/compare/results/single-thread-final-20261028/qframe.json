@@ -1,0 +1,227 @@
+{
+  "metadata": {
+    "arch": "amd64",
+    "check_only": false,
+    "cpu": "12th Gen Intel(R) Core(TM) i3-1215U",
+    "dependencies": {
+      "github.com/Alifarid0011/sheetframe": "v0.1.0 => /home/ali/Desktop/Projects/sheetframe",
+      "github.com/mauricelam/genny": "v0.0.0-20190320071652-0800202903e5",
+      "github.com/tobgu/qframe": "v0.4.0"
+    },
+    "go": "go1.26.8",
+    "gogc": "",
+    "gomaxprocs": 1,
+    "logical_cpus": 1,
+    "os": "linux",
+    "repeats": 7,
+    "timing": "native eager operation result; checksum/export/GC before sample excluded; normal GC during operation enabled",
+    "warmups": 2,
+    "process_wall_seconds_including_untimed_work": 8.557690858840942
+  },
+  "results": [
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 100000,
+      "operation": "select",
+      "samples_ns": [
+        8418,
+        5022,
+        6825,
+        3747,
+        3179,
+        3207,
+        3059
+      ],
+      "median_ns": 3747,
+      "output_rows": 100000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "1912289876ca73c35aaab73d4d1e784400475664026f0e41be8cec85cf993aa2",
+      "status": "ok"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 100000,
+      "operation": "filter",
+      "samples_ns": [
+        549369,
+        562075,
+        552351,
+        672717,
+        694832,
+        672685,
+        669135
+      ],
+      "median_ns": 669135,
+      "output_rows": 50000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "15b7db71a53a5b46f4da05a1c9b42a108d08495eb7ad4e322e91548b50dac6fd",
+      "status": "ok"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 100000,
+      "operation": "group_sum",
+      "samples_ns": [
+        18524373,
+        17051212,
+        16981331,
+        18752985,
+        17463582,
+        16931851,
+        17670936
+      ],
+      "median_ns": 17463582,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "d7ce46d62374fc0460b6eba6a849629abe135acc6319898c5c374650c7b3c9df",
+      "status": "ok",
+      "note": "Timed native group-label sort restores first-seen g00..g19 order for this dataset"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 100000,
+      "operation": "stable_sort",
+      "output_rows": 0,
+      "status": "skipped",
+      "note": "QFrame v0.4.0 uses unstable quicksort; incompatible equal-key order"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 100000,
+      "operation": "pipeline",
+      "samples_ns": [
+        8853909,
+        8814434,
+        8813670,
+        8813452,
+        8805280,
+        8798868,
+        8811556
+      ],
+      "median_ns": 8813452,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "6262825b3fb216fed29fce980431ef0396e4933926eb629abccc0656e0d1e028",
+      "status": "ok"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 1000000,
+      "operation": "select",
+      "samples_ns": [
+        20233,
+        12354,
+        9211,
+        11025,
+        11048,
+        10005,
+        10443
+      ],
+      "median_ns": 11025,
+      "output_rows": 1000000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "422abf4a0a3e106e215db35a700de54277475bf233d1df1f9353205f75517d23",
+      "status": "ok"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 1000000,
+      "operation": "filter",
+      "samples_ns": [
+        5806748,
+        5643623,
+        5662442,
+        5623760,
+        5650310,
+        5603034,
+        5662313
+      ],
+      "median_ns": 5650310,
+      "output_rows": 500000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "6a8a11768a480b804147ecbce6c2d4fc55c7d280767d3cc1e3fc956f70ac53f8",
+      "status": "ok"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 1000000,
+      "operation": "group_sum",
+      "samples_ns": [
+        173687773,
+        176709148,
+        177254794,
+        178507457,
+        177607322,
+        177514750,
+        180480163
+      ],
+      "median_ns": 177514750,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "660c8eff9ad5bb69d31f4de027aea792fa3987cacefc0afcb2cd15d4c2c63404",
+      "status": "ok",
+      "note": "Timed native group-label sort restores first-seen g00..g19 order for this dataset"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 1000000,
+      "operation": "stable_sort",
+      "output_rows": 0,
+      "status": "skipped",
+      "note": "QFrame v0.4.0 uses unstable quicksort; incompatible equal-key order"
+    },
+    {
+      "engine": "qframe",
+      "version": "v0.4.0",
+      "input_rows": 1000000,
+      "operation": "pipeline",
+      "samples_ns": [
+        92992569,
+        92676797,
+        91836365,
+        92656577,
+        91766662,
+        91698304,
+        91934144
+      ],
+      "median_ns": 91934144,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "5311fdd06357cde1f45db2e82162db765eee43a16c861cfd7264d1b5714ece5e",
+      "status": "ok"
+    }
+  ]
+}

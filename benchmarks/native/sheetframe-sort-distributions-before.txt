@@ -1,0 +1,18 @@
+goos: linux
+goarch: amd64
+pkg: github.com/Alifarid0011/sheetframe
+cpu: 12th Gen Intel(R) Core(TM) i3-1215U
+BenchmarkNumericSort/wide-2         	       2	 133152659 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/wide-2         	       2	 124298730 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/wide-2         	       2	 123636220 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/sorted-2       	      58	   4833360 ns/op	 2408569 B/op	       5 allocs/op
+BenchmarkNumericSort/sorted-2       	      85	   4908941 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/sorted-2       	      58	   4878366 ns/op	 2408659 B/op	       5 allocs/op
+BenchmarkNumericSort/equal-2        	      49	   5093551 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/equal-2        	      58	   4995891 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/equal-2        	      63	   4918521 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/nullable-2     	       2	 118623786 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/nullable-2     	       2	 117584607 ns/op	 2408568 B/op	       5 allocs/op
+BenchmarkNumericSort/nullable-2     	       2	 116474605 ns/op	 2408568 B/op	       5 allocs/op
+PASS
+ok  	github.com/Alifarid0011/sheetframe	4.800s

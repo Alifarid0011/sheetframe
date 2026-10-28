@@ -1,0 +1,255 @@
+{
+  "metadata": {
+    "arch": "amd64",
+    "check_only": false,
+    "cpu": "12th Gen Intel(R) Core(TM) i3-1215U",
+    "dependencies": {
+      "github.com/Alifarid0011/sheetframe": "v0.1.0 => /home/ali/Desktop/Projects/contribution-notes/sheetframe-v010",
+      "github.com/mauricelam/genny": "v0.0.0-20190320071652-0800202903e5",
+      "github.com/tobgu/qframe": "v0.4.0"
+    },
+    "go": "go1.26.8",
+    "gogc": "",
+    "gomaxprocs": 1,
+    "logical_cpus": 1,
+    "os": "linux",
+    "repeats": 7,
+    "timing": "native eager operation result; checksum/export/GC before sample excluded; normal GC during operation enabled",
+    "warmups": 2,
+    "process_wall_seconds_including_untimed_work": 40.65243887901306
+  },
+  "results": [
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "select",
+      "samples_ns": [
+        5367,
+        5191,
+        4776,
+        5999,
+        4376,
+        4357,
+        3968
+      ],
+      "median_ns": 4776,
+      "output_rows": 100000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "1912289876ca73c35aaab73d4d1e784400475664026f0e41be8cec85cf993aa2",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "filter",
+      "samples_ns": [
+        2103181,
+        2116861,
+        2132019,
+        2130819,
+        2104449,
+        2133940,
+        2090944
+      ],
+      "median_ns": 2116861,
+      "output_rows": 50000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "15b7db71a53a5b46f4da05a1c9b42a108d08495eb7ad4e322e91548b50dac6fd",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "group_sum",
+      "samples_ns": [
+        70875920,
+        67519370,
+        70495746,
+        70644603,
+        70767403,
+        71047199,
+        70928716
+      ],
+      "median_ns": 70767403,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "d7ce46d62374fc0460b6eba6a849629abe135acc6319898c5c374650c7b3c9df",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "stable_sort",
+      "samples_ns": [
+        60143833,
+        57790739,
+        55890869,
+        55791805,
+        56734784,
+        58212442,
+        55360589
+      ],
+      "median_ns": 56734784,
+      "output_rows": 100000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "375181415fe886fcf306d9dad2d2add40104a5b113a411aef6ef991afa6a28da",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 100000,
+      "operation": "pipeline",
+      "samples_ns": [
+        46854667,
+        50571110,
+        46665524,
+        47043259,
+        47336006,
+        47664791,
+        47277164
+      ],
+      "median_ns": 47277164,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "6262825b3fb216fed29fce980431ef0396e4933926eb629abccc0656e0d1e028",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "select",
+      "samples_ns": [
+        10676,
+        23484,
+        9826,
+        11607,
+        13254,
+        10952,
+        9501
+      ],
+      "median_ns": 10952,
+      "output_rows": 1000000,
+      "columns": [
+        "amount"
+      ],
+      "sha256": "422abf4a0a3e106e215db35a700de54277475bf233d1df1f9353205f75517d23",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "filter",
+      "samples_ns": [
+        24926982,
+        24646973,
+        24362243,
+        25596601,
+        25462933,
+        27967735,
+        24931639
+      ],
+      "median_ns": 24931639,
+      "output_rows": 500000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "6a8a11768a480b804147ecbce6c2d4fc55c7d280767d3cc1e3fc956f70ac53f8",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "group_sum",
+      "samples_ns": [
+        680128318,
+        707213374,
+        694082689,
+        686688249,
+        699323758,
+        697259216,
+        682344899
+      ],
+      "median_ns": 694082689,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "660c8eff9ad5bb69d31f4de027aea792fa3987cacefc0afcb2cd15d4c2c63404",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "stable_sort",
+      "samples_ns": [
+        716342703,
+        755424368,
+        711340922,
+        714336104,
+        713895397,
+        706109843,
+        714268143
+      ],
+      "median_ns": 714268143,
+      "output_rows": 1000000,
+      "columns": [
+        "group",
+        "amount",
+        "flag"
+      ],
+      "sha256": "7b3dcd74f2dbf2194cc9e908d9bada681b588b0e57f162746826bf7e4ffd00dd",
+      "status": "ok"
+    },
+    {
+      "engine": "sheetframe-baseline",
+      "version": "v0.1.0",
+      "input_rows": 1000000,
+      "operation": "pipeline",
+      "samples_ns": [
+        456882000,
+        455073145,
+        446165353,
+        449062768,
+        442132665,
+        584308221,
+        719441570
+      ],
+      "median_ns": 455073145,
+      "output_rows": 20,
+      "columns": [
+        "group",
+        "total"
+      ],
+      "sha256": "5311fdd06357cde1f45db2e82162db765eee43a16c861cfd7264d1b5714ece5e",
+      "status": "ok"
+    }
+  ]
+}
