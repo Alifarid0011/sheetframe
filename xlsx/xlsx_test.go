@@ -195,7 +195,7 @@ func TestWriteRejectsLossyValues(t *testing.T) {
 	if err := Write(&bytes.Buffer{}, frame, ""); err == nil {
 		t.Fatal("oversized header accepted")
 	}
-	for _, value := range []any{strings.Repeat("a", 32767), time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(9999, 12, 31, 0, 0, 0, 0, time.UTC)} {
+	for _, value := range []any{strings.Repeat("a", 32767), strings.Repeat("😀", 16383) + "a", time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC), time.Date(1900, 2, 28, 0, 0, 0, 0, time.UTC), time.Date(1900, 3, 1, 0, 0, 0, 0, time.UTC), time.Date(9999, 12, 31, 0, 0, 0, 0, time.UTC)} {
 		frame, err := sf.New([]string{"value"}, [][]any{{value}})
 		if err != nil {
 			t.Fatal(err)
