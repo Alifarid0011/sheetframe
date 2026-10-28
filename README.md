@@ -100,12 +100,30 @@ withTax, err := frame.WithColumn("tax", func(row sf.Row) (any, error) {
 
 See the [API guide](docs/API.md) for join examples, null behavior, and errors.
 
+## Measured performance
+
+On the published one-million-row workload (one thread, fixed CPU affinity,
+seven samples), the updated core improves on v0.1.0:
+
+| Operation | v0.1.0 | v0.2.0 | Speedup |
+| --- | ---: | ---: | ---: |
+| Group + sum | 694.1 ms | 51.7 ms | 13.4× |
+| Stable numeric sort | 714.3 ms | 281.5 ms | 2.5× |
+| Filter → group → sort | 455.1 ms | 50.3 ms | 9.0× |
+
+Group/sum is faster than both measured pandas string configurations and QFrame
+on this workload. Polars is faster; pandas also sorts faster. Radix sorting uses
+extra temporary memory. These measurements exclude Excel I/O and construction.
+[Compare every case and raw sample](https://alifarid0011.github.io/sheetframe/benchmarks.html)
+or [reproduce the benchmark](benchmarks/compare/README.md).
+
 ## Honest boundaries
 
 This is an early, eager, in-memory library, **not a pandas replacement**. It does
 not implement Series arithmetic, indexing/MultiIndex, windows, pivot tables,
-plotting, out-of-core processing, or the complete pandas API. There is no claim
-that it outperforms pandas or other Go DataFrame libraries.
+plotting, out-of-core processing, or the complete pandas API. Performance is
+workload-specific: the [measured comparison](docs/BENCHMARKS.md) includes both
+faster and slower cases against pandas, Polars, and QFrame.
 
 - Text values and column names must be valid UTF-8. Invalid text is rejected before
   it can create ambiguous group or join keys.
