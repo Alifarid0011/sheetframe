@@ -1,0 +1,7 @@
+invoice_id,customer,amount,status
+INV001,North Studio,1200,paid
+INV002,Oak Workshop,,draft
+INV003,Linen Co,0,credited
+INV004,East Design,450,open
+INV005,West Collective,,draft
+INV006,South Works,800,paid
