@@ -1,12 +1,14 @@
 /* Sheetframe's UI delegates every data operation to the real Go/WASM bridge. */
+import { workflows } from './workflows.mjs';
 'use strict';
 (() => {
   const $ = id => document.getElementById(id);
   let ready = false;
   let busy = false;
   let schema = [];
+  let activeWorkflow = null;
   let sourceName = 'studio_orders.csv';
-  const actionIDs = ['sample-button', 'load-csv', 'apply-button', 'clear-button', 'insight-button', 'download-csv', 'download-xlsx', 'file-input'];
+  const actionIDs = ['workflow-select', 'sample-button', 'load-csv', 'apply-button', 'clear-button', 'insight-button', 'download-csv', 'download-xlsx', 'file-input'];
   const operationIDs = ['filter-enabled', 'sort-enabled', 'group-enabled'];
   const selectors = ['filter-column', 'sort-column', 'group-column', 'agg-column'];
 
@@ -19,6 +21,7 @@
     const disabled = !ready || busy;
     syncSortColumns();
     actionIDs.forEach(id => { $(id).disabled = disabled; });
+    $('insight-button').disabled = disabled || !activeWorkflow;
     operationIDs.forEach(id => { $(id).disabled = disabled; });
     ['filter-column', 'filter-op', 'filter-value'].forEach(id => { $(id).disabled = disabled || !$('filter-enabled').checked; });
     ['sort-column', 'sort-direction'].forEach(id => { $(id).disabled = disabled || !$('sort-enabled').checked; });
@@ -53,7 +56,7 @@
     return response;
   }
 
-  async function execute(request, { loadName, badge = 'Original dataset' } = {}) {
+  async function execute(request, { loadName, workflow, badge = 'Original dataset' } = {}) {
     if (!ready || busy) return;
     busy = true;
     error();
@@ -64,11 +67,12 @@
       const response = bridge(request);
       if (loadName) {
         sourceName = loadName;
+        activeWorkflow = workflow || null;
         schema = response.schema || [];
         $('dataset-name').textContent = sourceName;
-        $('source-tag').textContent = sourceName === 'studio_orders.csv' ? 'SAMPLE' : 'LOCAL';
+        $('source-tag').textContent = activeWorkflow ? 'SAMPLE' : 'LOCAL';
         $('source-shape').textContent = `${formatCount(response.totalRows)} rows · ${response.columns.length} columns`;
-        $('result-title').textContent = sourceName === 'studio_orders.csv' ? 'Studio orders' : sourceName.replace(/\.(csv|xlsx)$/i, '');
+        $('result-title').textContent = activeWorkflow ? workflows[activeWorkflow].title : sourceName.replace(/\.(csv|xlsx)$/i, '');
         populateColumns();
         operationIDs.forEach(id => { $(id).checked = false; });
       }
@@ -183,14 +187,53 @@
     return request;
   }
 
+  function configureWorkflow() {
+    const workflow = workflows[$('workflow-select').value];
+    const { filter, group, sort } = workflow.request;
+    $('filter-enabled').checked = Boolean(filter);
+    $('group-enabled').checked = Boolean(group);
+    $('sort-enabled').checked = Boolean(sort);
+    if (filter) {
+      $('filter-column').value = filter.column;
+      $('filter-op').value = filter.op;
+      $('filter-value').value = filter.value ?? '';
+    }
+    if (group) {
+      $('group-column').value = group.keys[0];
+      $('agg-column').value = group.aggregations[0].column;
+      $('agg-op').value = group.aggregations[0].op;
+    }
+    syncControls();
+    if (sort) {
+      $('sort-column').value = sort.column;
+      $('sort-direction').value = sort.descending ? 'desc' : 'asc';
+    }
+  }
+
   async function loadSample() {
+    if (!ready || busy) return;
+    const key = $('workflow-select').value;
+    const workflow = workflows[key];
+    busy = true;
+    syncControls();
+    let csv;
     try {
-      const response = await fetch('sample.csv');
-      if (!response.ok) throw new Error('The sample CSV could not be loaded. You can still import your own file.');
-      const csv = await response.text();
-      $('csv-input').value = csv;
-      return await execute({ action: 'load_csv', csv }, { loadName: 'studio_orders.csv' });
+      const response = await fetch(workflow.source);
+      if (!response.ok) throw new Error('The sample CSV could not be loaded. Try again, or import your own file.');
+      csv = await response.text();
     } catch (cause) { error(cause.message); }
+    finally { busy = false; syncControls(); }
+    if (csv === undefined) return;
+    const response = await execute({ action: 'load_csv', csv }, { loadName: workflow.file, workflow: key });
+    if (response) {
+      $('csv-input').value = csv;
+      $('sample-download').href = workflow.source;
+      $('sample-download').download = workflow.file;
+      $('workflow-question').textContent = workflow.question;
+      $('workflow-steps').textContent = workflow.steps;
+      configureWorkflow();
+    }
+    return response;
   }
 
   $('transform-form').addEventListener('submit', event => {
@@ -205,6 +248,7 @@
   $('filter-op').addEventListener('change', syncControls);
   ['group-column', 'agg-column', 'agg-op'].forEach(id => $(id).addEventListener('change', syncControls));
   $('sample-button').addEventListener('click', loadSample);
+  $('workflow-select').addEventListener('change', loadSample);
   $('load-csv').addEventListener('click', () => execute({ action: 'load_csv', csv: $('csv-input').value }, { loadName: 'pasted_data.csv' }));
   $('clear-button').addEventListener('click', async () => {
     const response = await execute({ action: 'transform' });
@@ -214,19 +258,10 @@
     }
   });
   $('insight-button').addEventListener('click', () => {
-    if (!schema.some(field => field.name === 'region') || !schema.some(field => field.name === 'revenue' && String(field.kind).toLowerCase() === 'number')) {
-      error('This example uses region and revenue columns. Reset the sample to explore this view.');
-      return;
-    }
-    $('filter-enabled').checked = false;
-    $('sort-enabled').checked = true;
-    $('group-enabled').checked = true;
-    $('group-column').value = 'region';
-    $('agg-column').value = 'revenue';
-    $('agg-op').value = 'sum';
-    syncControls();
-    $('sort-column').value = 'sum_revenue';
-    $('sort-direction').value = 'desc';
+    if (!activeWorkflow) return;
+    // Use the loaded workflow even if fetching a newly selected sample failed.
+    $('workflow-select').value = activeWorkflow;
+    configureWorkflow();
     $('transform-form').requestSubmit();
   });
   $('file-input').addEventListener('change', async event => {
@@ -275,7 +310,7 @@
   $('download-xlsx').addEventListener('click', () => download('xlsx'));
   $('copy-install').addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText('go get github.com/Alifarid0011/sheetframe');
+      await navigator.clipboard.writeText($('install-command').textContent);
       $('copy-install').textContent = 'Copied!';
       setTimeout(() => { $('copy-install').textContent = 'Copy'; }, 2000);
     } catch (_) { $('copy-install').textContent = 'Select to copy'; }
@@ -316,6 +351,12 @@
       error(cause.message);
     }
   }
+  Object.entries(workflows).forEach(([key, workflow]) => {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = workflow.label;
+    $('workflow-select').append(option);
+  });
   syncControls();
   boot();
 })();

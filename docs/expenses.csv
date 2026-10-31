@@ -1,0 +1,9 @@
+expense_id,category,description,amount
+E001,Software,Editor licenses,120
+E002,Travel,Train tickets,85
+E003,Office,Paper and supplies,45
+E004,Software,Hosting,80
+E005,Travel,Hotel,240
+E006,Office,Desk repair,60
+E007,Software,Monitoring,35
+E008,Travel,Local transport,25

@@ -15,7 +15,7 @@ Built by [alifarid](https://github.com/Alifarid0011).
 Requires **Go 1.25+**.
 
 ```sh
-go get github.com/Alifarid0011/sheetframe
+go get github.com/Alifarid0011/sheetframe@v0.2.0
 ```
 
 The core package uses only the Go standard library. Import the optional `xlsx`
@@ -153,10 +153,17 @@ considering for other needs. Sheetframe focuses on a small Excel-to-analysis pat
 ## Try the real engine in your browser
 
 The [playground](https://alifarid0011.github.io/sheetframe/) compiles this Go module
-to WebAssembly. Upload CSV/XLSX, filter, group, sort, and download the full result.
+to WebAssembly. Start with sales totals, expenses by category, or missing-amount
+cleanup. Each workflow loads an inspectable, downloadable CSV and fills the
+transformation controls; **Run sample view** computes the result in Go. Upload
+your own CSV/XLSX, filter, group, sort, and download the full result.
 Files stay in your browser. The table previews at most 200 rows; exports include
 all result rows. Displayed timings are measured in your browser and are not native
 Go benchmarks. Initial WebAssembly loading is larger than an ordinary static page.
+Use small files: this eager, in-memory demo runs on the browser's main thread,
+and large workbooks can make the tab unresponsive. There is no guaranteed dataset
+capacity. For saved notebooks with Go cells, see
+[GoBook and its local setup guide](https://alifarid0011.github.io/gobook/).
 
 Run it locally:
 
@@ -164,6 +171,14 @@ Run it locally:
 bash scripts/build-demo.sh
 python3 -m http.server 8000 --directory docs
 # open http://localhost:8000
+```
+
+The workflow checks use Node.js 24's built-in test runner with the same generated
+WASM engine and CSV files served by the page; no npm packages are needed:
+
+```sh
+bash scripts/build-demo.sh
+node --test docs/workflows.test.mjs
 ```
 
 ## Development
